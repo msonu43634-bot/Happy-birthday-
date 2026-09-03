@@ -91,26 +91,6 @@ footer{text-align:center;padding:35px;color:#b99bab}
 }
 
 
-/* Memories: local image1.jpg, image2.jpg, image3.jpg */
-.memory-card img,
-.gallery img,
-#memories img{
-  width:100%;
-  height:260px;
-  display:block;
-  object-fit:cover;
-  object-position:center;
-  border-radius:18px;
-}
-
-
-.memory-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px}
-.memory-photo{padding:12px;display:flex;flex-direction:column;gap:10px;min-height:310px}
-.memory-photo img{width:100%;height:250px;display:block;object-fit:cover;border-radius:16px}
-.photo-fallback{height:250px;align-items:center;justify-content:center;border-radius:16px;background:#ffffff10;color:#fff9}
-.upload-memory{display:block;text-align:center;cursor:pointer}
-@media(max-width:800px){.memory-gallery{grid-template-columns:1fr}.memory-photo{min-height:0}}
-
 
 /* Birthday welcome animation after password unlock */
 #birthdayWelcome{
@@ -143,13 +123,77 @@ body.page-enter .hero-card{animation:pageReveal 1.5s cubic-bezier(.2,.8,.2,1) bo
 @keyframes pandaBounce{from{transform:translateY(0) rotate(-4deg)}to{transform:translateY(-12px) rotate(4deg)}}
 @keyframes pageReveal{0%{opacity:0;transform:translateY(35px) scale(.97)}100%{opacity:1;transform:translateY(0) scale(1)}}
 
+
+/* Cinematic Photo Reveal */
+.reveal-stage{max-width:920px;margin:28px auto 0;text-align:center}
+.reveal-photo-wrap{
+  width:min(900px,92vw);
+  min-height:360px;
+  max-height:72vh;
+  margin:22px auto;
+  padding:8px;
+  border-radius:26px;
+  background:linear-gradient(135deg,#ffd1e9,#ff4f9f,#8d1b69,#ffd1e9);
+  box-shadow:0 0 35px #ff4f9f66,0 25px 70px #000b;
+  opacity:0;
+  transform:scale(.78) translateY(35px);
+  transition:opacity .8s ease,transform .9s cubic-bezier(.2,.9,.2,1);
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.reveal-photo-wrap.show{opacity:1;transform:scale(1) translateY(0)}
+.reveal-photo-wrap img{
+  width:100%;
+  height:100%;
+  max-height:calc(72vh - 16px);
+  display:block;
+  object-fit:contain;
+  object-position:center;
+  border-radius:19px;
+  background:#0d0610;
+}
+.reveal-caption{min-height:42px;font-size:clamp(18px,4vw,27px);font-weight:700;color:#ffdbea}
+.reveal-btn{margin-top:10px}
+.reveal-progress{font-size:13px;opacity:.7;margin-top:8px}
+
+
+.welcome-photo{
+  width:min(300px,72vw);
+  aspect-ratio:2/3;
+  margin:0 auto 18px;
+  padding:6px;
+  border-radius:24px;
+  background:linear-gradient(135deg,#ffd1e9,#ff4f9f,#8d1b69,#ffd1e9);
+  box-shadow:0 0 35px #ff4f9f77,0 20px 55px #000b;
+}
+.welcome-photo img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+  object-position:center;
+  border-radius:19px;
+}
+.reveal-photo-wrap{
+  width:min(420px,90vw);
+  aspect-ratio:3/4;
+}
+.reveal-photo-wrap img{
+  object-fit:contain;
+  background:#0d0610;
+}
+
 </style>
 </head>
 <body class="locked">
 
 <div id="birthdayWelcome" class="hide">
   <div class="welcome-content">
-    <div class="panda">🐼🩷</div>
+    <div class="welcome-photo">
+      <img id="welcomePhoto" src="./photo5.jpg" alt="Birthday Queen">
+    </div>
     <h2>Happy Birthday Panda 🐼</h2>
     <p>My cutest Panda, this little surprise is just for you ❤️</p>
   </div>
@@ -226,6 +270,23 @@ body.page-enter .hero-card{animation:pageReveal 1.5s cubic-bezier(.2,.8,.2,1) bo
 
 
 
+
+<section id="reveal">
+  <div class="container">
+    <div class="kicker">A little surprise for Panda</div>
+    <h2>Photo Reveal 📸🩷</h2>
+    <p>Wait Panda… I have something for you 👀</p>
+    <div class="reveal-stage">
+      <div class="reveal-photo-wrap" id="revealPhotoWrap">
+        <img id="revealPhoto" src="./image1.jpg" alt="Panda memory">
+      </div>
+      <div class="reveal-caption" id="revealCaption"></div>
+      <div class="reveal-progress" id="revealProgress">Ready?</div>
+      <button class="btn reveal-btn" id="revealBtn" onclick="nextReveal()">✨ Reveal Photo</button>
+    </div>
+  </div>
+</section>
+
 <section id="gifts"><div class="container">
 <div class="kicker">Three tiny gifts</div><h2>For My Panda 🎁</h2>
 <div class="grid">
@@ -257,6 +318,7 @@ const SECRET="Anshu🩷Sonu";
 function unlock(){
   const input=document.getElementById("password");
   const err=document.getElementById("error");
+
   if(input.value===SECRET){
     document.getElementById("lock").classList.add("hidden");
     document.body.classList.remove("locked");
@@ -264,15 +326,19 @@ function unlock(){
     sessionStorage.setItem("pandaUnlocked","yes");
 
     const welcome=document.getElementById("birthdayWelcome");
+    const welcomeImg=document.getElementById("welcomePhoto");
+    if(welcomeImg) welcomeImg.src="./photo5.jpg";
     welcome.classList.remove("hide");
 
-    // Password submission is a user gesture, so start the birthday song here.
     const birthday=document.getElementById("birthdayAudio");
     const romantic=document.getElementById("romanticAudio");
     if(romantic) romantic.pause();
     if(birthday){
       birthday.currentTime=0;
-      birthday.play().catch(()=>{});
+      birthday.play().catch(()=>{
+        const hint=document.getElementById("musicHint");
+        if(hint) hint.textContent="Tap Birthday Song if your browser blocked autoplay 🎵";
+      });
     }
 
     startHearts();
@@ -280,7 +346,7 @@ function unlock(){
     setTimeout(()=>{
       welcome.classList.add("hide");
       setTimeout(()=>document.body.classList.remove("page-enter"),1500);
-    },2600);
+    },3000);
   }else{
     err.textContent="Wrong password 😏 Only Panda should know the secret.";
     input.value="";
@@ -299,22 +365,7 @@ function pandaWins(){
  w.innerHTML="<b>🏆 WINNER: PANDA 🐼🩷</b><br><br>Obviously! Panda wins because Panda is sooooo cutie. Jangliii never had a chance. 😂❤️<br><small>Official score: Panda ∞ — Jangliii 0</small>";
  for(let i=0;i<18;i++)setTimeout(()=>makeHeart(),i*80);
 }
-function setupPhoto(id){
- document.getElementById(id).addEventListener("change",e=>{
-  const f=e.target.files[0]; if(!f)return;
-  const label=e.target.parentElement;
-  const url=URL.createObjectURL(f);
-  label.innerHTML="<img src='"+url+"' alt='Memory photo'><input id='"+id+"' type='file' accept='image/*' hidden>";
-  label.querySelector("input").addEventListener("change",arguments.callee);
- });
-}
-["photo1","photo2","photo3"].forEach(id=>{
- document.getElementById(id).addEventListener("change",e=>{
-   const f=e.target.files[0]; if(!f)return;
-   const label=e.target.parentElement;
-   label.innerHTML="<img src='"+URL.createObjectURL(f)+"' alt='Memory photo'>";
- });
-});
+
 function playBirthdaySong(){
   const b=document.getElementById("birthdayAudio");
   const r=document.getElementById("romanticAudio");
@@ -369,6 +420,48 @@ if(!document.body.classList.contains("locked"))startHearts();
     });
   }
 });
+
+const revealPhotos=["photo1.jpg","photo2.jpg","photo3.jpg","photo4.jpg","photo5.jpg","photo6.jpg"];
+const revealCaptions=[
+  "Us, just being us 🩷",
+  "One more beautiful memory with you ❤️",
+  "A little moment I will always keep close 🥰",
+  "Your birthday queen moment 👑🐼",
+  "My beautiful Panda… birthday queen indeed 👑🩷",
+  "And one last memory for my favourite person 💕"
+];
+let revealIndex=0;
+function nextReveal(){
+  const wrap=document.getElementById("revealPhotoWrap");
+  const img=document.getElementById("revealPhoto");
+  const cap=document.getElementById("revealCaption");
+  const prog=document.getElementById("revealProgress");
+  const btn=document.getElementById("revealBtn");
+
+  if(revealIndex>=revealPhotos.length){
+    revealIndex=0;
+    cap.textContent="Happy Birthday My Panda 🐼🩷";
+    prog.textContent="✨ All memories revealed ✨";
+    btn.textContent="✨ Reveal Again";
+    wrap.classList.remove("show");
+    return;
+  }
+
+  wrap.classList.remove("show");
+  const current=revealIndex;
+  revealIndex++;
+
+  setTimeout(()=>{
+    img.src=revealPhotos[current];
+    img.alt="Panda memory "+(current+1);
+    cap.textContent=revealCaptions[current];
+    prog.textContent=`Photo ${current+1} of ${revealPhotos.length}`;
+    btn.textContent=current===revealPhotos.length-1 ? "💖 Finish Reveal" : "✨ Next Photo";
+    wrap.classList.add("show");
+    for(let i=0;i<6;i++) setTimeout(()=>makeHeart(),i*90);
+  },220);
+}
+
 </script>
 </body>
 </html>
