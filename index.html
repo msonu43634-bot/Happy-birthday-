@@ -185,6 +185,47 @@ body.page-enter .hero-card{animation:pageReveal 1.5s cubic-bezier(.2,.8,.2,1) bo
   background:#0d0610;
 }
 
+
+/* NEW: premium interactive birthday additions */
+.feature-photo{width:min(250px,70vw);aspect-ratio:2/3;margin:0 auto 22px;padding:6px;border-radius:24px;background:linear-gradient(135deg,#ffd1e9,#ff4f9f,#8d1b69,#ffd1e9);box-shadow:0 0 35px #ff4f9f66,0 20px 60px #000b;overflow:hidden}
+.feature-photo img{width:100%;height:100%;display:block;object-fit:contain;border-radius:19px;background:#0d0610}
+.love-meter{width:min(700px,92vw);height:28px;margin:25px auto 12px;border-radius:999px;padding:4px;background:#ffffff12;border:1px solid #ffffff1c;overflow:hidden}
+.love-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#ff4f9f,#ffd1e9,#ff4f9f);background-size:200% 100%;animation:meterGlow 2s linear infinite;transition:width 2s cubic-bezier(.2,.9,.2,1)}
+@keyframes meterGlow{to{background-position:200% 0}}
+.love-score{font-size:clamp(28px,6vw,52px);font-weight:700;color:#ffd6e9;text-shadow:0 0 20px #ff4f9f}
+.gift-box{width:150px;height:125px;margin:25px auto;position:relative;cursor:pointer;filter:drop-shadow(0 18px 25px #0008);transition:.3s}
+.gift-box:hover{transform:translateY(-8px) scale(1.04)}
+.gift-base{position:absolute;left:12px;right:12px;bottom:0;height:85px;border-radius:8px 8px 14px 14px;background:linear-gradient(135deg,#ff4f9f,#9c165f)}
+.gift-lid{position:absolute;left:4px;right:4px;top:23px;height:28px;border-radius:8px;background:linear-gradient(135deg,#ff8fc4,#d82d7b);z-index:2;transition:.8s cubic-bezier(.2,.9,.2,1);transform-origin:center bottom}
+.gift-ribbon-v{position:absolute;top:23px;bottom:0;left:50%;width:22px;transform:translateX(-50%);background:#ffd1e9;z-index:3}
+.gift-ribbon-h{position:absolute;left:4px;right:4px;top:48px;height:17px;background:#ffd1e9;z-index:3}
+.gift-bow{position:absolute;top:2px;left:50%;transform:translateX(-50%);font-size:45px;z-index:4}
+.gift-box.opened .gift-lid{transform:translateY(-72px) rotate(-8deg)}
+.gift-box.opened{animation:giftShake .55s ease}
+@keyframes giftShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px) rotate(-3deg)}75%{transform:translateX(8px) rotate(3deg)}}
+.surprise-message{max-height:0;overflow:hidden;opacity:0;transition:1s ease;margin:auto;width:min(680px,92vw)}
+.surprise-message.show{max-height:500px;opacity:1;margin-top:18px}
+.cake{position:relative;width:220px;height:190px;margin:25px auto 10px}
+.cake-tier{position:absolute;left:10px;right:10px;height:55px;border-radius:12px 12px 18px 18px;background:linear-gradient(135deg,#ffd5e7,#f27db0);box-shadow:inset 0 -8px 0 #d65b94,0 15px 30px #0005}
+.cake-tier.one{bottom:0}.cake-tier.two{bottom:43px;left:28px;right:28px}.cake-tier.three{bottom:84px;left:48px;right:48px}
+.candle{position:absolute;top:15px;left:50%;transform:translateX(-50%);width:13px;height:48px;border-radius:4px;background:repeating-linear-gradient(135deg,#fff 0 7px,#ff78b5 7px 14px);z-index:3}
+.flame{position:absolute;top:-30px;left:50%;transform:translateX(-50%);font-size:30px;animation:flame 0.6s ease-in-out infinite alternate}
+@keyframes flame{to{transform:translateX(-50%) scale(1.18) translateY(-3px)}}
+.cake.off .flame{display:none}
+.wish-text{font-size:14px;color:#ffc8df;min-height:25px}
+.star-field{position:relative;overflow:hidden;min-height:70vh;background:radial-gradient(circle at 50% 35%,#5c154b44,transparent 45%)}
+.star-field:before{content:"✦  ·  ✧   ·   ✦  ·   ✧  ·  ✦   ·   ✧";position:absolute;inset:10% 0;font-size:clamp(18px,4vw,34px);letter-spacing:25px;line-height:4;opacity:.45;animation:twinkle 2.5s ease-in-out infinite alternate;pointer-events:none}
+@keyframes twinkle{to{opacity:.9;transform:scale(1.03)}}
+.final-surprise{position:fixed;inset:0;z-index:9997;background:radial-gradient(circle at 50% 30%,#7d164c,#17050f 58%,#050207);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .8s ease,visibility .8s ease}
+.final-surprise.show{opacity:1;visibility:visible;pointer-events:auto}
+.final-card{width:min(620px,95vw);max-height:90vh;overflow:auto;text-align:center;padding:28px 22px;border-radius:30px;background:#160914eF;border:1px solid #ffffff22;box-shadow:0 30px 100px #000;transform:scale(.75) translateY(30px);transition:1s cubic-bezier(.2,.9,.2,1)}
+.final-surprise.show .final-card{transform:scale(1) translateY(0)}
+.final-card h2{font-size:clamp(35px,8vw,65px);text-shadow:0 0 28px #ff4f9f}
+.close-surprise{position:absolute;top:18px;right:18px;border:1px solid #ffffff25;background:#ffffff10;color:#fff;border-radius:50%;width:42px;height:42px;cursor:pointer;font-size:20px}
+.type-line{min-height:130px;white-space:pre-line;text-align:left;width:min(650px,92vw);margin:18px auto;color:#ffe6f0;font-size:15px;line-height:1.9}
+.reveal-photo-wrap img[src="./welcome-photo.jpg"]{object-fit:contain}
+@media(max-width:650px){.feature-photo{width:min(230px,70vw)}.cake{transform:scale(.9)}.type-line{font-size:14px}}
+
 </style>
 </head>
 <body class="locked">
@@ -192,7 +233,7 @@ body.page-enter .hero-card{animation:pageReveal 1.5s cubic-bezier(.2,.8,.2,1) bo
 <div id="birthdayWelcome" class="hide">
   <div class="welcome-content">
     <div class="welcome-photo">
-      <img id="welcomePhoto" src="./photo5.jpg" alt="Birthday Queen">
+      <img id="welcomePhoto" src="./welcome-photo.jpg" alt="Birthday Queen">
     </div>
     <h2>Happy Birthday Panda 🐼</h2>
     <p>My cutest Panda, this little surprise is just for you ❤️</p>
@@ -215,7 +256,7 @@ body.page-enter .hero-card{animation:pageReveal 1.5s cubic-bezier(.2,.8,.2,1) bo
 </div>
 
 <nav>
-<a href="#home">Home</a><a href="#letter">Letter</a><a href="#reasons">Why You</a><a href="#battle">Panda vs Jangli</a><a href="#gifts">Gifts</a>
+<a href="#home">Home</a><a href="#letter">Letter</a><a href="#reasons">Why You</a><a href="#battle">Panda vs Jangli</a><a href="#love">Love Meter</a><a href="#cake">Cake</a><a href="#reveal">Photos</a><a href="#gifts">Gifts</a>
 </nav>
 
 <main id="site">
@@ -243,7 +284,7 @@ body.page-enter .hero-card{animation:pageReveal 1.5s cubic-bezier(.2,.8,.2,1) bo
 <p>So today, smile a little extra, make a beautiful wish, and remember that somewhere there is your Jangliii cheering for you. 🐼🩷</p>
 <div class="script">Always yours,<br>Jangliii ❤️</div>
 </div></div></div>
-<p>Tap the envelope to open/close your letter.</p>
+<p>Tap the envelope to open/close your letter.</p><button class="btn" onclick="typeMyLetter()">⌨️ Type My Letter</button><div id="typedLetter" class="type-line"></div>
 </div></section>
 
 <section id="reasons"><div class="container">
@@ -270,6 +311,48 @@ body.page-enter .hero-card{animation:pageReveal 1.5s cubic-bezier(.2,.8,.2,1) bo
 
 
 
+
+
+<section id="love"><div class="container glass">
+  <div class="kicker">No calculator can measure this</div>
+  <h2 class="script">Panda ❤️ Jangliii</h2>
+  <div class="feature-photo"><img src="./welcome-photo.jpg" alt="Birthday Queen Anshu"></div>
+  <div class="love-score" id="loveScore">0%</div>
+  <div class="love-meter"><div class="love-fill" id="loveFill"></div></div>
+  <p id="loveMessage">Starting the love meter… 🐼</p>
+  <button class="btn" onclick="startLoveMeter()">💖 Measure Our Love</button>
+</div></section>
+
+<section id="cake"><div class="container hero-card">
+  <div class="kicker">Make a wish, Birthday Queen</div>
+  <h2>Birthday Cake 🎂</h2>
+  <div class="feature-photo"><img src="./welcome-photo.jpg" alt="Birthday Queen"></div>
+  <div class="cake" id="cakeBox">
+    <div class="candle"><span class="flame">🔥</span></div>
+    <div class="cake-tier three"></div><div class="cake-tier two"></div><div class="cake-tier one"></div>
+  </div>
+  <div class="wish-text" id="wishText">The candle is waiting for your wish… ✨</div>
+  <button class="btn" onclick="makeWish()">🕯️ Make a Wish</button>
+</div></section>
+
+<section id="night" class="star-field"><div class="container glass">
+  <div class="kicker">Under the same stars</div>
+  <h2 class="script">For My Birthday Queen 🌙</h2>
+  <div class="feature-photo"><img src="./welcome-photo.jpg" alt="Anshu Birthday Queen"></div>
+  <p style="font-size:18px;max-width:720px;margin:auto">If I could give you one thing today, I would give you the ability to see yourself through my eyes — then you'd know just how beautiful, precious and irreplaceable you are to me. 🩷</p>
+  <p><b>Keep shining, Panda. Your Jangliii is always cheering for you. 🐯❤️</b></p>
+</div></section>
+
+<section id="gift-surprise"><div class="container glass">
+  <div class="kicker">Don't open this too quickly 👀</div>
+  <h2>One Secret Gift 🎁</h2>
+  <div class="feature-photo"><img src="./welcome-photo.jpg" alt="Birthday Queen"></div>
+  <div class="gift-box" id="bigGift" onclick="openBigGift()">
+    <div class="gift-bow">🎀</div><div class="gift-lid"></div><div class="gift-base"></div><div class="gift-ribbon-v"></div><div class="gift-ribbon-h"></div>
+  </div>
+  <p>Tap the gift box.</p>
+  <div id="surpriseMessage" class="surprise-message glass"><h3 class="script" style="font-size:42px;color:#ffafd0">Surprise, Panda! 🐼🩷</h3><p>You are officially gifted <b>unlimited love, hugs, care, teasing and Jangliii-level madness</b> — valid forever. 😂❤️</p></div>
+</div></section>
 
 <section id="reveal">
   <div class="container">
@@ -301,9 +384,23 @@ body.page-enter .hero-card{animation:pageReveal 1.5s cubic-bezier(.2,.8,.2,1) bo
 <h2 class="script">Happy Birthday, My Panda</h2>
 <p>You win every argument, every battle and every “Panda vs Jangliii” competition — because you're too cute to lose. 😭❤️</p>
 <p><b>Happy Birthday, Anshu.</b><br>Keep smiling. Keep shining. Stay my favourite Panda.</p>
-<button class="btn" onclick="location.reload()">Replay ↻</button>
+<button class="btn" onclick="openFinalSurprise()">💖 One Last Surprise</button><button class="btn" onclick="location.reload()">Replay ↻</button>
 </div></section>
 </main>
+
+
+<div id="finalSurprise" class="final-surprise">
+  <button class="close-surprise" onclick="closeFinalSurprise()">×</button>
+  <div class="final-card">
+    <div class="feature-photo"><img src="./welcome-photo.jpg" alt="Birthday Queen Anshu"></div>
+    <div class="kicker">This one is only for you</div>
+    <h2 class="script">Happy Birthday, Panda 🐼🩷</h2>
+    <p id="finalType" class="type-line"></p>
+    <p style="font-size:18px"><b>Love you more than all the stars. ✨❤️</b></p>
+    <button class="btn" onclick="burstHearts()">💗 Send Love</button>
+    <button class="btn" onclick="closeFinalSurprise()">Close</button>
+  </div>
+</div>
 
 <div class="music">
 <button onclick="playBirthdaySong()">🎂 Birthday</button>
@@ -461,6 +558,39 @@ function nextReveal(){
     for(let i=0;i<6;i++) setTimeout(()=>makeHeart(),i*90);
   },220);
 }
+
+
+
+function typeMyLetter(){
+ const el=document.getElementById('typedLetter');
+ const text='Happy Birthday, Panda! 🐼🩷\n\nI hope this little webpage makes you smile the way you make me smile. You deserve beautiful days, big dreams, endless happiness and all the love in the world.\n\nNo matter how much I tease you, one thing will always stay serious: you are incredibly special to me.\n\nAlways your Jangliii 🐯❤️';
+ el.textContent=''; let i=0;
+ const timer=setInterval(()=>{el.textContent=text.slice(0,++i); if(i>=text.length)clearInterval(timer)},28);
+}
+function startLoveMeter(){
+ const fill=document.getElementById('loveFill'),score=document.getElementById('loveScore'),msg=document.getElementById('loveMessage');
+ let n=0; fill.style.width='0%'; score.textContent='0%'; msg.textContent='Calculating Panda + Jangliii… 🥹';
+ const timer=setInterval(()=>{n+=4; if(n>=100){n=100;clearInterval(timer)} score.textContent=n+'%'; fill.style.width=n+'%'; if(n===100) msg.textContent='ERROR: Love exceeded 100%. Official result = INFINITE ❤️♾️';},45);
+}
+function makeWish(){
+ const cake=document.getElementById('cakeBox'), text=document.getElementById('wishText');
+ cake.classList.add('off'); text.textContent='Wish sent! May every beautiful dream of my Birthday Queen come true. ✨🎂🩷';
+ for(let i=0;i<25;i++)setTimeout(()=>makeHeart(),i*60);
+}
+function openBigGift(){
+ const box=document.getElementById('bigGift'), msg=document.getElementById('surpriseMessage');
+ box.classList.toggle('opened'); msg.classList.toggle('show');
+ if(box.classList.contains('opened')){for(let i=0;i<18;i++)setTimeout(()=>makeHeart(),i*70)}
+}
+function openFinalSurprise(){
+ const modal=document.getElementById('finalSurprise'); modal.classList.add('show');
+ const el=document.getElementById('finalType');
+ const text='Panda, today is your day — but honestly, I feel lucky every day because you are in my life. Thank you for being you: beautiful, cute, crazy, caring and completely unforgettable. 🩷\n\nHappy Birthday, Anshu. May this year bring you everything your heart quietly wishes for. And whenever you need a Jangliii, you know where to find me. 🐯❤️';
+ el.textContent=''; let i=0; clearInterval(window.finalTimer); window.finalTimer=setInterval(()=>{el.textContent=text.slice(0,++i);if(i>=text.length)clearInterval(window.finalTimer)},24);
+ for(let i=0;i<30;i++)setTimeout(()=>makeHeart(),i*50);
+}
+function closeFinalSurprise(){document.getElementById('finalSurprise').classList.remove('show')}
+function burstHearts(){for(let i=0;i<50;i++)setTimeout(()=>makeHeart(),i*35)}
 
 </script>
 </body>
