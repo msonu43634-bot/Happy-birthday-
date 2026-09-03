@@ -111,9 +111,50 @@ footer{text-align:center;padding:35px;color:#b99bab}
 .upload-memory{display:block;text-align:center;cursor:pointer}
 @media(max-width:800px){.memory-gallery{grid-template-columns:1fr}.memory-photo{min-height:0}}
 
+
+/* Birthday welcome animation after password unlock */
+#birthdayWelcome{
+  position:fixed;
+  inset:0;
+  z-index:9998;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:radial-gradient(circle at center,#5b123f 0%,#180711 55%,#070308 100%);
+  opacity:1;
+  transition:opacity 1s ease, visibility 1s ease;
+}
+#birthdayWelcome.hide{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+.welcome-content{text-align:center;padding:24px;animation:welcomePop 1.15s cubic-bezier(.2,.9,.2,1)}
+.welcome-content .panda{font-size:clamp(64px,14vw,120px);animation:pandaBounce 1.2s ease-in-out infinite alternate}
+.welcome-content h2{
+  margin:12px 0 0;
+  font-size:clamp(32px,8vw,70px);
+  color:#fff;
+  text-shadow:0 0 24px #ff4f9f,0 0 55px #ff4f9f88;
+}
+.welcome-content p{margin-top:12px;color:#ffd9ec;font-size:clamp(15px,3vw,21px)}
+body.page-enter .hero-card{animation:pageReveal 1.5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes welcomePop{0%{transform:scale(.55) translateY(35px);opacity:0}70%{transform:scale(1.06);opacity:1}100%{transform:scale(1)}}
+@keyframes pandaBounce{from{transform:translateY(0) rotate(-4deg)}to{transform:translateY(-12px) rotate(4deg)}}
+@keyframes pageReveal{0%{opacity:0;transform:translateY(35px) scale(.97)}100%{opacity:1;transform:translateY(0) scale(1)}}
+
 </style>
 </head>
 <body class="locked">
+
+<div id="birthdayWelcome" class="hide">
+  <div class="welcome-content">
+    <div class="panda">🐼🩷</div>
+    <h2>Happy Birthday Panda 🐼</h2>
+    <p>My cutest Panda, this little surprise is just for you ❤️</p>
+  </div>
+</div>
+
 <div class="bg"></div><div id="hearts"></div>
 
 <div id="lock">
@@ -130,7 +171,7 @@ footer{text-align:center;padding:35px;color:#b99bab}
 </div>
 
 <nav>
-<a href="#home">Home</a><a href="#letter">Letter</a><a href="#reasons">Why You</a><a href="#battle">Panda vs Jangli</a><a href="#memories">Memories</a><a href="#gifts">Gifts</a>
+<a href="#home">Home</a><a href="#letter">Letter</a><a href="#reasons">Why You</a><a href="#battle">Panda vs Jangli</a><a href="#gifts">Gifts</a>
 </nav>
 
 <main id="site">
@@ -183,32 +224,7 @@ footer{text-align:center;padding:35px;color:#b99bab}
 <div id="winner" class="win hidden"></div>
 </div></section>
 
-<section id="memories"><div class="container">
-<div class="kicker">Little pieces of us</div><h2>Our Memories 📸</h2>
-<p>Add your favourite photos below. They stay in this browser only.</p>
-<div class="gallery memory-gallery">
-  <div class="photo memory-photo">
-    <img id="memoryImg1" src="./image1.jpg" alt="Memory 1"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-    <div class="photo-fallback" style="display:none">📷 image1.jpg</div>
-    <label class="upload-memory" for="photo1">Change Photo 1</label>
-    <input id="photo1" type="file" accept=".jpg,.jpeg,.png,.webp,image/*" hidden>
-  </div>
-  <div class="photo memory-photo">
-    <img id="memoryImg2" src="./image2.jpg" alt="Memory 2"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-    <div class="photo-fallback" style="display:none">📷 image2.jpg</div>
-    <label class="upload-memory" for="photo2">Change Photo 2</label>
-    <input id="photo2" type="file" accept=".jpg,.jpeg,.png,.webp,image/*" hidden>
-  </div>
-  <div class="photo memory-photo">
-    <img id="memoryImg3" src="./image3.jpg" alt="Memory 3"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-    <div class="photo-fallback" style="display:none">📷 image3.jpg</div>
-    <label class="upload-memory" for="photo3">Change Photo 3</label>
-    <input id="photo3" type="file" accept=".jpg,.jpeg,.png,.webp,image/*" hidden>
-  </div>
-</div></div></section>
+
 
 <section id="gifts"><div class="container">
 <div class="kicker">Three tiny gifts</div><h2>For My Panda 🎁</h2>
@@ -232,26 +248,50 @@ footer{text-align:center;padding:35px;color:#b99bab}
 <button onclick="playBirthdaySong()">🎂 Birthday</button>
 <button onclick="playRomanticSong()">❤️ Romantic</button>
 </div>
-<audio id="birthdayAudio" src="birthday.m4a" preload="none"></audio>
-<audio id="romanticAudio" src="romantic.m4a" preload="none"></audio>
+<audio id="birthdayAudio" src="birthday.mp3" preload="none"></audio>
+<audio id="romanticAudio" src="romantic.mp3" preload="none"></audio>
 <footer>Made with too much love by Jangliii 🐯❤️ for Panda 🐼</footer>
 
 <script>
 const SECRET="Anshu🩷Sonu";
 function unlock(){
- const input=document.getElementById("password"), err=document.getElementById("error");
- if(input.value===SECRET){
-   document.getElementById("lock").classList.add("hidden");
-   document.body.classList.remove("locked");
-   sessionStorage.setItem("pandaUnlocked","yes");
-   startHearts();
- }else{
-   err.textContent="Wrong password 😏 Only Panda should know the secret.";
-   input.value=""; input.focus();
- }
+  const input=document.getElementById("password");
+  const err=document.getElementById("error");
+  if(input.value===SECRET){
+    document.getElementById("lock").classList.add("hidden");
+    document.body.classList.remove("locked");
+    document.body.classList.add("page-enter");
+    sessionStorage.setItem("pandaUnlocked","yes");
+
+    const welcome=document.getElementById("birthdayWelcome");
+    welcome.classList.remove("hide");
+
+    // Password submission is a user gesture, so start the birthday song here.
+    const birthday=document.getElementById("birthdayAudio");
+    const romantic=document.getElementById("romanticAudio");
+    if(romantic) romantic.pause();
+    if(birthday){
+      birthday.currentTime=0;
+      birthday.play().catch(()=>{});
+    }
+
+    startHearts();
+
+    setTimeout(()=>{
+      welcome.classList.add("hide");
+      setTimeout(()=>document.body.classList.remove("page-enter"),1500);
+    },2600);
+  }else{
+    err.textContent="Wrong password 😏 Only Panda should know the secret.";
+    input.value="";
+    input.focus();
+  }
 }
 document.getElementById("password").addEventListener("keydown",e=>{if(e.key==="Enter")unlock()});
-if(sessionStorage.getItem("pandaUnlocked")==="yes"){document.getElementById("lock").classList.add("hidden");document.body.classList.remove("locked");}
+if(sessionStorage.getItem("pandaUnlocked")==="yes"){
+  document.getElementById("lock").classList.add("hidden");
+  document.body.classList.remove("locked");
+}
 function toggleLetter(){document.getElementById("env").classList.toggle("open")}
 function pandaWins(){
  const w=document.getElementById("winner");
@@ -276,14 +316,22 @@ function setupPhoto(id){
  });
 });
 function playBirthdaySong(){
- document.getElementById("romanticAudio").pause();
- const a=document.getElementById("birthdayAudio");
- a.play().catch(()=>alert("Add your birthday.mp3 file to this folder first."));
+  const b=document.getElementById("birthdayAudio");
+  const r=document.getElementById("romanticAudio");
+  if(r) r.pause();
+  if(b){
+    b.currentTime=0;
+    b.play().catch(()=>{});
+  }
 }
 function playRomanticSong(){
- document.getElementById("birthdayAudio").pause();
- const a=document.getElementById("romanticAudio");
- a.play().catch(()=>alert("Add your romantic.mp3 file to this folder first."));
+  const b=document.getElementById("birthdayAudio");
+  const r=document.getElementById("romanticAudio");
+  if(b) b.pause();
+  if(r){
+    r.currentTime=0;
+    r.play().catch(()=>{});
+  }
 }
 function startHearts(){
  setInterval(()=>{if(!document.body.classList.contains("locked"))makeHeart()},900);
