@@ -103,6 +103,14 @@ footer{text-align:center;padding:35px;color:#b99bab}
   border-radius:18px;
 }
 
+
+.memory-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px}
+.memory-photo{padding:12px;display:flex;flex-direction:column;gap:10px;min-height:310px}
+.memory-photo img{width:100%;height:250px;display:block;object-fit:cover;border-radius:16px}
+.photo-fallback{height:250px;align-items:center;justify-content:center;border-radius:16px;background:#ffffff10;color:#fff9}
+.upload-memory{display:block;text-align:center;cursor:pointer}
+@media(max-width:800px){.memory-gallery{grid-template-columns:1fr}.memory-photo{min-height:0}}
+
 </style>
 </head>
 <body class="locked">
@@ -178,10 +186,28 @@ footer{text-align:center;padding:35px;color:#b99bab}
 <section id="memories"><div class="container">
 <div class="kicker">Little pieces of us</div><h2>Our Memories 📸</h2>
 <p>Add your favourite photos below. They stay in this browser only.</p>
-<div class="gallery">
-<label class="photo" for="photo1">
-<label class="photo" for="photo2">
-<label class="photo" for="photo3">
+<div class="gallery memory-gallery">
+  <div class="photo memory-photo">
+    <img id="memoryImg1" src="./image1.jpg" alt="Memory 1"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+    <div class="photo-fallback" style="display:none">📷 image1.jpg</div>
+    <label class="upload-memory" for="photo1">Change Photo 1</label>
+    <input id="photo1" type="file" accept=".jpg,.jpeg,.png,.webp,image/*" hidden>
+  </div>
+  <div class="photo memory-photo">
+    <img id="memoryImg2" src="./image2.jpg" alt="Memory 2"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+    <div class="photo-fallback" style="display:none">📷 image2.jpg</div>
+    <label class="upload-memory" for="photo2">Change Photo 2</label>
+    <input id="photo2" type="file" accept=".jpg,.jpeg,.png,.webp,image/*" hidden>
+  </div>
+  <div class="photo memory-photo">
+    <img id="memoryImg3" src="./image3.jpg" alt="Memory 3"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+    <div class="photo-fallback" style="display:none">📷 image3.jpg</div>
+    <label class="upload-memory" for="photo3">Change Photo 3</label>
+    <input id="photo3" type="file" accept=".jpg,.jpeg,.png,.webp,image/*" hidden>
+  </div>
 </div></div></section>
 
 <section id="gifts"><div class="container">
@@ -206,8 +232,8 @@ footer{text-align:center;padding:35px;color:#b99bab}
 <button onclick="playBirthdaySong()">🎂 Birthday</button>
 <button onclick="playRomanticSong()">❤️ Romantic</button>
 </div>
-<audio id="birthdayAudio" src="birthday.mp3" preload="none"></audio>
-<audio id="romanticAudio" src="romantic.mp3" preload="none"></audio>
+<audio id="birthdayAudio" src="birthday.m4a" preload="none"></audio>
+<audio id="romanticAudio" src="romantic.m4a" preload="none"></audio>
 <footer>Made with too much love by Jangliii 🐯❤️ for Panda 🐼</footer>
 
 <script>
@@ -275,6 +301,26 @@ function countdown(){
 }
 countdown();setInterval(countdown,1000);
 if(!document.body.classList.contains("locked"))startHearts();
+
+// Memories: automatically load image1.jpg, image2.jpg, image3.jpg from the same folder.
+// The upload buttons are only a fallback for changing them in the current browser.
+["1","2","3"].forEach(n=>{
+  const input=document.getElementById("photo"+n);
+  const img=document.getElementById("memoryImg"+n);
+  if(input && img){
+    input.addEventListener("change", e=>{
+      const file=e.target.files && e.target.files[0];
+      if(!file) return;
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        img.src=ev.target.result;
+        img.style.display="block";
+        if(img.nextElementSibling) img.nextElementSibling.style.display="none";
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+});
 </script>
 </body>
 </html>
